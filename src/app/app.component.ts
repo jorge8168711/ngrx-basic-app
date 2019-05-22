@@ -1,7 +1,8 @@
-import { Component } from '@angular/core';
+import { Component, OnInit, OnDestroy } from '@angular/core';
 import { Store } from '@ngrx/store';
-import { IncrementAction, DecreaseAction } from './store/actions';
 import { AppState } from './store/app.reducers';
+import { SubSink } from 'subsink';
+import * as fromCounterActions from './store/actions';
 
 @Component({
   selector: 'app-root',
@@ -15,7 +16,7 @@ import { AppState } from './store/app.reducers';
         <button (click)="increase()">+</button>
       </div>
 
-      <!-- <app-child [counter]="counter" (counterHasChange)="counter = $event"></app-child> -->
+      <app-child></app-child>
     </main>
   `,
   styles: [
@@ -38,24 +39,33 @@ import { AppState } from './store/app.reducers';
     }
   `]
 })
-export class AppComponent {
+export class AppComponent implements OnInit, OnDestroy {
   public counter;
+  private subs = new SubSink();
 
-  constructor(private store: Store<AppState>) {
+  constructor(private store: Store<AppState>) {}
+
+  ngOnInit(): void {
     // esto me suscribe al store completo con todos los estadps
     // this.store.subscribe( state => {})
 
     // esto me suscribe a una parte del store, en este caso a COUNT
     // this.store.select('count').subscribe( state => {})
 
-    this.store.select('count').subscribe( state => this.counter = state);
+    this.subs.add(
+      this.store.select('count').subscribe( state => this.counter = state)
+    );
   }
 
-  public increase() {
-    this.store.dispatch( new IncrementAction() );
+  ngOnDestroy(): void {
+    this.subs.unsubscribe();
   }
 
-  public decrease() {
-    this.store.dispatch( new DecreaseAction() );
+  public increase(): void {
+    this.store.dispatch( new fromCounterActions.IncrementAction() );
+  }
+
+  public decrease(): void {
+    this.store.dispatch( new fromCounterActions.DecreaseAction() );
   }
 }

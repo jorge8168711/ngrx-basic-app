@@ -1,13 +1,21 @@
-import { Action } from '@ngrx/store';
-import { INCREASE, DECREASE } from '../actions';
+import * as fromCounterActions from '../actions';
 
-export function counterReducer(state: number = 0, action: Action) {
+export function counterReducer(state: number = 0, action: fromCounterActions.counterActions) {
   switch (action.type) {
-    case INCREASE:
+    case fromCounterActions.INCREASE:
       return state + 1;
 
-    case DECREASE:
+    case fromCounterActions.DECREASE:
       return state === 0 ? 0 : state - 1;
+
+    case fromCounterActions.DIVIDE:
+      return state / action.payload;
+
+    case fromCounterActions.MULTIPLY:
+      return state * action.payload;
+
+    case fromCounterActions.RESET:
+      return state = 0;
 
     default:
       return state;
