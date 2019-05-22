@@ -1,4 +1,9 @@
-# ReduxApp
+# Basic NGRX app
+
+Counters example for test NGRX on Angular applications.
+Basic web app created with Angular and NGRX.
+Example created with this Udemy course: https://www.udemy.com/redux-ngrx-angular/
+
 
 This project was generated with [Angular CLI](https://github.com/angular/angular-cli) version 7.3.8.
 
